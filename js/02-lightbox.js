@@ -4,8 +4,6 @@ const galleryEl = document.querySelector(".gallery");
 const imagesMarkup = createGridPicture(galleryItems);
 galleryEl.insertAdjacentHTML("beforeend", imagesMarkup);
 
-galleryEl.addEventListener("click", onImageClick);
-
 function createGridPicture(arr) {
   return arr
     .map(
@@ -18,11 +16,7 @@ function createGridPicture(arr) {
     .join("");
 }
 
-function onImageClick(event) {
-  event.preventDefault();
-  const newSrc = event.target.dataset.source;
-  const lightbox = new SimpleLightbox(".gallery a", {
-    captionsData: "alt",
-    captionDelay: "250ms",
-  });
-}
+const lightbox = new SimpleLightbox(".gallery a", {
+  captionsData: "alt",
+  captionDelay: "250ms",
+});
