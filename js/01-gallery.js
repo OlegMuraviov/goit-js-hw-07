@@ -1,30 +1,49 @@
 import { galleryItems } from "./gallery-items.js";
+
 // Change code below this line
-console.log(galleryItems);
 
-class Image {
-  constructor({ preview, original, description }) {
-    this.alt = description;
-    this.src = original;
-    this.preview = preview;
-  }
-}
 const galleryEl = document.querySelector(".gallery");
-const galleryListEl = document.createElement("ul");
-galleryListEl.classList.add("gallery");
-for (const element of galleryItems) {
-  const galleryItemEl = document.createElement("li");
-  galleryItemEl.classList.add("gallery__item");
-  const galleryImageEl = document.createElement("img");
-  galleryImageEl.classList.add("gallery__image");
-  //   const newImage = new Image(element);
-  galleryImageEl.src = element.preview;
-  galleryImageEl.alt = element.description;
+const imagesMarkup = createGridPicture(galleryItems);
+galleryEl.insertAdjacentHTML("beforeend", imagesMarkup);
 
-  galleryListEl.append(galleryItemEl);
-  galleryItemEl.append(galleryImageEl);
+galleryEl.addEventListener("click", onImageClick);
 
-  console.log(galleryImageEl.attributes);
+function onPressKey(event) {
+  console.log(event.key);
 }
-galleryEl.append(galleryListEl);
-console.log(galleryListEl);
+
+function createGridPicture(arr) {
+  return arr
+    .map(
+      ({ preview, original, description }) =>
+        `
+  <div class="gallery__item">
+  <a class="gallery__link" href="${original}">
+    <img
+      class="gallery__image"
+      src="${preview}"
+      data-source="${original}"
+      alt="${description}"
+    />
+  </a>
+</div>
+`
+    )
+    .join("");
+}
+
+function onImageClick(event) {
+  event.preventDefault();
+  const newSrc = event.target.dataset.source;
+  const instance = basicLightbox.create(`
+    <img src="${newSrc}" width="800" height="600">
+`);
+  instance.show();
+  const eventFn = (event) => {
+    if (event.code === "Escape") {
+      document.removeEventListener("keydown", eventFn);
+      return instance.close();
+    }
+  };
+  document.addEventListener("keydown", eventFn);
+}
