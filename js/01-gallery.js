@@ -8,10 +8,6 @@ galleryEl.insertAdjacentHTML("beforeend", imagesMarkup);
 
 galleryEl.addEventListener("click", onImageClick);
 
-function onPressKey(event) {
-  console.log(event.key);
-}
-
 function createGridPicture(arr) {
   return arr
     .map(
@@ -31,19 +27,23 @@ function createGridPicture(arr) {
     )
     .join("");
 }
-
+let newSrc;
 function onImageClick(event) {
   event.preventDefault();
-  const newSrc = event.target.dataset.source;
-  const instance = basicLightbox.create(`
-    <img src="${newSrc}" width="800" height="600">
-`);
-  instance.show();
-  const eventFn = (event) => {
-    if (event.code === "Escape") {
-      document.removeEventListener("keydown", eventFn);
-      return instance.close();
+  newSrc = event.target.dataset.source;
+  const instance = basicLightbox.create(
+    `<img src="${newSrc}" width="800" height="600">`,
+    {
+      onShow: () => {
+        window.addEventListener("keydown", eventFn);
+      },
+      onClose: () => {
+        window.removeEventListener("keydown", eventFn);
+      },
     }
+  );
+  const eventFn = (event) => {
+    if (event.code === "Escape") return instance.close();
   };
-  document.addEventListener("keydown", eventFn);
+  instance.show();
 }
