@@ -21,7 +21,8 @@ function createGridPicture(arr) {
 function onImageClick(event) {
   event.preventDefault();
   const newSrc = event.target.dataset.source;
-  var lightbox = new SimpleLightbox(".gallery a", {
-    /* options */
+  const lightbox = new SimpleLightbox(".gallery a", {
+    captionsData: "alt",
+    captionDelay: "250ms",
   });
 }
